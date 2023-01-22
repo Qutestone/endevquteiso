@@ -31,7 +31,7 @@ pacman-key --populate archlinux endeavouros
 pacman -Sy
 
 # Install liveuser skel (in case of conflicts use overwrite)
-pacman -U --noconfirm --overwrite "/etc/skel/.bash_profile","/etc/skel/.bashrc" -- "/root/endeavouros-skel-liveuser/"*".pkg.tar.zst"
+#pacman -U --noconfirm --overwrite "/etc/skel/.bash_profile","/etc/skel/.bashrc" -- "/root/endeavouros-skel-liveuser/"*".pkg.tar.zst"
 
 # Prepare livesession settings and user
 sed -i 's/#\(en_US\.UTF-8\)/\1/' "/etc/locale.gen"
@@ -40,13 +40,15 @@ ln -sf "/usr/share/zoneinfo/UTC" "/etc/localtime"
 
 # Set root permission and shell
 usermod -s /usr/bin/bash root
+#mount overlay 
+mount -t overlay overlay -o lowerdir=/etc/skel:/etc/liveconfig /etc/live-skel
 
 # Create liveuser
-useradd -m -p "" -g 'liveuser' -G 'sys,rfkill,wheel,uucp,nopasswdlogin,adm,tty' -s /bin/bash liveuser
+useradd -m -p "" -g 'liveuser' -G 'sys,rfkill,wheel,uucp,nopasswdlogin,adm,tty' -s /bin/bash liveuser -k /etc/live-skel
 
 # Remove liveuser skel to then install user skel
-pacman -Rns --noconfirm -- "endeavouros-skel-liveuser"
-rm -rf "/root/endeavouros-skel-liveuser"
+#pacman -Rns --noconfirm -- "endeavouros-skel-liveuser"
+rm -rf "/etc/live-skel"
 
 # Root qt style for Calamares
 mkdir "/root/.config"
