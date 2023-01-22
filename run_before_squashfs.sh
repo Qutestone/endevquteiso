@@ -41,7 +41,7 @@ ln -sf "/usr/share/zoneinfo/UTC" "/etc/localtime"
 # Set root permission and shell
 usermod -s /usr/bin/bash root
 #mount overlay 
-mount -t overlay overlay -o lowerdir=/etc/skel:/etc/liveconfig /etc/live-skel
+mount -t overlay overlay -o lowerdir=/etc/liveconfig:/etc/skel /etc/live-skel
 
 # Create liveuser
 useradd -m -p "" -g 'liveuser' -G 'sys,rfkill,wheel,uucp,nopasswdlogin,adm,tty' -s /bin/bash liveuser -k /etc/live-skel
@@ -49,10 +49,11 @@ useradd -m -p "" -g 'liveuser' -G 'sys,rfkill,wheel,uucp,nopasswdlogin,adm,tty' 
 # Remove liveuser skel to then install user skel
 #pacman -Rns --noconfirm -- "endeavouros-skel-liveuser"
 rm -rf "/etc/live-skel"
+rm -rf "/etc/liveconfig"
 
 # Root qt style for Calamares
 mkdir "/root/.config"
-cp -Rf "/home/liveuser/.config/"{"Kvantum","qt5ct"} "/root/.config/"
+cp -Rf "/home/liveuser/.config/"{"Kvantum","qt5ct","lxqt"} "/root/.config/"
 
 # Add builddate to motd:
 cat "/usr/lib/endeavouros-release" >> "/etc/motd"
